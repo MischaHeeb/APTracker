@@ -1,0 +1,13 @@
+# Auto detect text files and normalize line endings to LF
+* text=auto
+
+# Explicitly declare text files you want to always use LF
+*.cs text eol=lf
+*.csproj text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.dll binary
