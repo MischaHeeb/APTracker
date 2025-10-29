@@ -1,0 +1,6 @@
+@APTrackerAPI_HostAddress = http://localhost:5062
+
+GET {{APTrackerAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
