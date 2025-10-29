@@ -52,3 +52,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# XXX> Ignore various files that arent needed
+**/.vs/
+*.user
+*.suo
+*.pdb
+**/packages/
+# <XXX
