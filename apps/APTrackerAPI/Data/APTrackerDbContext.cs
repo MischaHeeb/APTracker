@@ -14,6 +14,7 @@ namespace APTrackerAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // To improve performance, we'll set two indexes on waiting time.
             modelBuilder.Entity<WaitingTime>()
                 .HasIndex(wt => wt.AttractionId);
 
