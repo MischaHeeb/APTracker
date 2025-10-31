@@ -60,4 +60,5 @@ nunit-*.xml
 *.pdb
 **/packages/
 **/wwwroot/lib/
+**/.idea/
 # <XXX
