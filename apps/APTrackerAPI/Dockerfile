@@ -12,6 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+# XXX> install EF Core tools
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+# <XXX
 COPY ["APTrackerAPI.csproj", "."]
 RUN dotnet restore "./APTrackerAPI.csproj"
 COPY . .
