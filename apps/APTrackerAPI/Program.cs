@@ -3,8 +3,6 @@ using APTrackerAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-ConfigurationManager configuration = builder.Configuration;
-
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 // Add services to the container.

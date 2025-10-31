@@ -1,4 +1,6 @@
-﻿namespace APTrackerAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace APTrackerAPI.Models
 {
     public class WaitingTime
     {
@@ -9,14 +11,17 @@
         /// <summary>
         /// Unique identifier for attraction this waiting time is referring to.
         /// </summary>
+        [Required]
         public required int AttractionId { get; set; }
         /// <summary>
         /// The timestamp when this waiting time was recorded.
         /// </summary>
+        [Required]
         public required DateTime Timestamp { get; set; }
         /// <summary>
         /// Waiting time in minutes.
         /// </summary>
+        [Required]
         public required int WaitingTimeInMinutes { get; set; }
 
         /// <summary>
