@@ -1,9 +1,7 @@
-﻿using APTrackerAPI.config;
-using APTrackerAPI.Data;
+﻿using APTrackerAPI.Data;
 using APTrackerAPI.Extensions;
 using APTrackerAPI.Filters;
 using Hangfire;
-using Hangfire.Dashboard;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
