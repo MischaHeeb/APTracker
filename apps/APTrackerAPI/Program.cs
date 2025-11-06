@@ -1,10 +1,18 @@
-﻿using APTrackerAPI.Data;
+﻿using APTrackerAPI.config;
+using APTrackerAPI.Data;
 using APTrackerAPI.Extensions;
+using APTrackerAPI.Filters;
+using Hangfire;
+using Hangfire.Dashboard;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Build together Database config
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
+// Setup Hangfire
+builder.Services.AddHangfireConfiguration(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -13,6 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 
 // Initialize Database
 using (var scope = app.Services.CreateScope())
@@ -24,9 +33,7 @@ using (var scope = app.Services.CreateScope())
     {
         logger.LogInformation("Initializing database");
         var context = services.GetRequiredService<APTrackerDbContext>();
-
         context.Database.Migrate();
-
         logger.LogInformation("Database successfully initialized!");
     }
     catch (Exception ex)
@@ -36,12 +43,18 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = [new HangfireAuthFilter(app.Environment.IsDevelopment())]
+});
 
 app.UseHttpsRedirection();
 
