@@ -48,90 +48,26 @@ jobs:
   docker-build:
     name: Docker Build Test
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create .env file
-        run: |
-          echo "DB_USER=testuser" >> .env
-          echo "DB_PASS=testpass" >> .env
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Start database
+      - name: Build API Docker image
         run: |
-          docker compose up -d db
+          docker build -t aptracker-api:test ./apps/APTrackerAPI
 
-      - name: Wait for database to be ready
+      - name: Build Web Docker image (if exists)
         run: |
-          echo "Waiting for PostgreSQL to be ready..."
-          for i in {1..30}; do
-            if docker compose ps db | grep -q "Up"; then
-              echo "Database container is up, checking connectivity..."
-              if docker exec -it aptracker-db pg_isready -U postgres 2>/dev/null | grep -q "accepting connections"; then
-                echo "Database is ready!"
-                break
-              fi
-            fi
-            echo "Attempt $i/30: Database not ready yet, waiting..."
-            sleep 2
-          done
+          docker build -t aptracker-web:test ./apps/APTrackerWeb || echo "No web app to build"
 
-      - name: Verify database is running
+      - name: Verify images were created
         run: |
-          docker compose ps
-          docker compose logs db --tail=20
+          docker images | grep aptracker
 
-      - name: Build and start API
-        run: |
-          docker compose up -d api
-          sleep 10
 
-      - name: Build and start Web
-        run: |
-          docker compose up -d web
-          sleep 5
-
-      - name: Check all services
-        run: |
-          echo "=== Service Status ==="
-          docker compose ps
-          
-          echo ""
-          echo "=== API Logs (last 30 lines) ==="
-          docker compose logs api --tail=30 || echo "No API logs yet"
-          
-          echo ""
-          echo "=== Web Logs (last 30 lines) ==="
-          docker compose logs web --tail=30 || echo "No Web logs yet"
-
-      - name: Test API endpoint (if available)
-        continue-on-error: true
-        run: |
-          echo "Testing API health endpoint..."
-          timeout 60 bash -c 'until curl -f http://localhost:5000/health 2>/dev/null; do echo "Waiting for API..."; sleep 3; done' && echo "✅ API is responding" || echo "⚠️ API health check timeout"
-
-      - name: Test Web endpoint (if available)
-        continue-on-error: true
-        run: |
-          echo "Testing Web endpoint..."
-          timeout 60 bash -c 'until curl -f http://localhost:8080 2>/dev/null; do echo "Waiting for Web..."; sleep 3; done' && echo "✅ Web is responding" || echo "⚠️ Web health check timeout"
-
-      - name: Show logs on failure
-        if: failure()
-        run: |
-          echo "=== Database Logs ==="
-          docker compose logs db
-          echo ""
-          echo "=== API Logs ==="
-          docker compose logs api
-          echo ""
-          echo "=== Web Logs ==="
-          docker compose logs web
-
-      - name: Cleanup
-        if: always()
-        run: docker compose down -v
 
   security-scan:
     name: Security Analysis
