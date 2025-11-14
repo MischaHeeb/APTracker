@@ -61,4 +61,5 @@ nunit-*.xml
 **/packages/
 **/wwwroot/lib/
 **/.idea/
+*.env
 # <XXX
