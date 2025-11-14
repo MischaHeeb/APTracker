@@ -11,19 +11,19 @@ namespace APTrackerAPI.Controllers
     {
         private readonly ILogger<AttractionController> _logger;
         private readonly APTrackerDbContext _dbContext;
-        
+
         public AttractionController(ILogger<AttractionController> logger, APTrackerDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;
         }
-        
+
         [HttpGet("GetAttraction")]
         public async Task<ActionResult<IEnumerable<Attraction>>> GetAttraction()
         {
             return await _dbContext.Attractions.ToListAsync();
         }
-        
+
         [HttpGet("GetAttraction/{id}")]
         public async Task<ActionResult<Attraction>> GetAttraction(int id)
         {
@@ -36,7 +36,6 @@ namespace APTrackerAPI.Controllers
 
             return attraction;
         }
-    
     }
 }
 
