@@ -46,6 +46,7 @@ namespace APTrackerAPI.Controllers
 
             if (attraction == null)
             {
+                _logger.LogWarning("Attraction with id {Id} does not exist", id);
                 return NotFound();
             }
 
