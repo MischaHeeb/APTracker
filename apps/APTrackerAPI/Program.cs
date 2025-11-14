@@ -4,7 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Build database configuration
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
+// Add health checks
+builder.Services.AddHealthChecks();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -35,6 +39,9 @@ using (var scope = app.Services.CreateScope())
         throw;
     }
 }
+
+// Map health check status to URI
+app.MapHealthChecks("health");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
